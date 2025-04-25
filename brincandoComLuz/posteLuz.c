@@ -1,23 +1,26 @@
-const int pinoLDR = A0; // pino onde o LRD está conectado
-const int pinoLED = 7; // pino onde o LED está conectado
-int leitura = 0; // variável para armazenar o valor lido pelo ADC
+const int pinoLDR = A0; // pino onde o LDR está conectado
+const int pinoLED = 7;  // pino onde o LED está conectado
+int leitura = 0;        // variável para armazenar o valor lido pelo ADC
 
 void setup() {
-  // configura os pinos do LDR e LED
   pinMode(pinoLDR, INPUT); 
   pinMode(pinoLED, OUTPUT);
+
+  Serial.begin(9600); // inicia a comunicação serial
 }
 
 void loop() {
-  // le o valor de ADC no pino do LDR
-  leitura = analogRead(pinoLDR);
+  leitura = analogRead(pinoLDR); // lê o valor do LDR
 
-  // verifica luminosidade do ambiente
-  if(leitura < 40){ // se a luminosidade for menor que 40
-    digitalWrite(pinoLED,HIGH); // acende o LED
+  Serial.print("Valor do LDR: ");
+  Serial.println(leitura); // mostra o valor no monitor serial
+
+  if(leitura < 40) {
+    digitalWrite(pinoLED, HIGH); // acende o LED
   }
-  else { // se não
-    digitalWrite(pinoLED,LOW); // apaga o LED
+  else {
+    digitalWrite(pinoLED, LOW);  // apaga o LED
   }
-  delay(100); // aguarda 100 milissegundos para uma nova leitura
+
+  delay(100); // espera 100ms para nova leitura
 }
