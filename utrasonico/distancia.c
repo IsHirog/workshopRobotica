@@ -1,53 +1,36 @@
-/******************************************************
- * Medindo Distância com HC-SR04
- ******************************************************/
+#include <Ultrasonic.h> 
 
-const int TRIG = 3;
-const int ECHO = 2;
-const int distancia_obstaculo = 20;
+#define pino_trigger 4  
+#define pino_echo 5  
+// Taxa de comunicação serial
+#define BAUD_RATE 9600
 
-void setup() {
-  Serial.begin(9600);
-  pinMode(TRIG, OUTPUT);
-  pinMode(ECHO, INPUT);
-  Serial.println("Iniciando sensor ultrassônico...");
-}
+Ultrasonic ultrasonic(pino_trigger, pino_echo);  
 
-void loop() {
-  long distancia = medirDistancia();
+void setup() {  
+  // Inicializa a comunicação serial
+  Serial.begin(BAUD_RATE); 
+  Serial.println("Monitoramento de Distancia - Sensor Ultrassonico");
+  Serial.println("----------------------------------------------");
+}  
 
-  if (distancia == 0) {
-    Serial.println("Falha na leitura (sem eco)");
-  } else if (distancia <= distancia_obstaculo) {
-    Serial.print("Com obstáculo: ");
-    Serial.print(distancia);
-    Serial.println(" cm");
-  } else {
-    Serial.print("Sem obstáculo: ");
-    Serial.print(distancia);
-    Serial.println(" cm");
-  }
+void loop() {  
+  float cmMsec, inMsec;  
+  
+  // 1. Faz a leitura do tempo do ultrassom
+  long microsec = ultrasonic.timing();  
+  
+  // 2. Converte o tempo para distancia em CM e Polegadas
+  cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM);  
+  inMsec = ultrasonic.convert(microsec, Ultrasonic::IN);  
 
-  delay(300);
-}
+  // 3. Exibe os dados no Monitor Serial
+  Serial.print("Distancia: "); 
+  Serial.print(cmMsec);        
+  Serial.print(" cm");         
+  Serial.print(" | ");
+  Serial.print(inMsec);        
+  Serial.println(" in");       // Pula uma linha no final para a próxima leitura
 
-long medirDistancia() {
-  // Garante que o TRIG começa em LOW
-  digitalWrite(TRIG, LOW);
-  delayMicroseconds(5);
-
-  // Envia pulso de 10 µs
-  digitalWrite(TRIG, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG, LOW);
-
-  // Mede duração do pulso no ECHO
-  long duracao = pulseIn(ECHO, HIGH, 30000); // timeout de 30 ms
-
-  // Se não recebeu eco, retorna 0
-  if (duracao == 0) return 0;
-
-  // Converte tempo em distância (cm)
-  long distancia = duracao / 58.2;
-  return distancia;
+  delay(1000); // Aguarda 1 segundo antes da próxima leitura (ajustado de 2000ms para 1000ms para um feedback mais rápido)
 }
