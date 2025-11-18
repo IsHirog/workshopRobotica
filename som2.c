@@ -12,14 +12,14 @@ int indexBuffer = 0;
 long soma = 0;
 
 // Thresholds de porcentagem
-int limiarVerde_ON = 10;
-int limiarVerde_OFF = 7;
+int limiarVerde_ON = 3;
+int limiarVerde_OFF = 1;
 
-int limiarAmarelo_ON = 35;
-int limiarAmarelo_OFF = 30;
+int limiarAmarelo_ON = 10;
+int limiarAmarelo_OFF = 7;
 
-int limiarVermelho_ON = 70;
-int limiarVermelho_OFF = 65;
+int limiarVermelho_ON = 20;
+int limiarVermelho_OFF = 11;
 
 // Estados
 bool verdeLigado = false;
