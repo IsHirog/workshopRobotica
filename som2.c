@@ -49,7 +49,26 @@ void loop() {
 
   int valorSuave = soma / N;
 
-  Serial.println(valorSuave);
+  // Percentual (0–100)
+  int porcento = map(valorSuave, 0, 1023, 0, 100);
+
+  // Quantos blocos vão acender (de 0 a 10)
+  int blocos = map(valorSuave, 0, 1023, 0, 10);
+
+  // Gera a barra
+  String barra = "[";
+  for (int i = 0; i < 10; i++) {
+    if (i < blocos) barra += "#";
+    else barra += "-";
+  }
+  barra += "]";
+
+  // PRINT no Serial Monitor
+  Serial.print(barra);
+  Serial.print("  ");
+  Serial.print(porcento);
+  Serial.println("%");
+
   delay(20);
 
   // --- LED Verde ---
@@ -64,7 +83,7 @@ void loop() {
   if (!vermelhoLigado && valorSuave >= limiarVermelho_ON) vermelhoLigado = true;
   if (vermelhoLigado && valorSuave < limiarVermelho_OFF) vermelhoLigado = false;
 
-  // Saída final (acumulativa)
+  // Saída final
   digitalWrite(LED_VERDE,   verdeLigado ? HIGH : LOW);
   digitalWrite(LED_AMARELO, amareloLigado ? HIGH : LOW);
   digitalWrite(LED_VERMELHO,vermelhoLigado ? HIGH : LOW);
