@@ -4,21 +4,21 @@ const int LED_VERDE = 6;
 const int LED_AMARELO = 7;
 const int LED_VERMELHO = 8;
 
-// Média móvel
-const int N = 10;
+// Média móvel mais sensível e suave
+const int N = 15;
 int buffer[N];
 int indexBuffer = 0;
 long soma = 0;
 
-// Thresholds com histerese
-int limiarVerde_ON = 300;
-int limiarVerde_OFF = 250;
+// Thresholds mais sensíveis
+int limiarVerde_ON = 150;
+int limiarVerde_OFF = 120;
 
-int limiarAmarelo_ON = 600;
-int limiarAmarelo_OFF = 550;
+int limiarAmarelo_ON = 350;
+int limiarAmarelo_OFF = 300;
 
-int limiarVermelho_ON = 800;
-int limiarVermelho_OFF = 750;
+int limiarVermelho_ON = 550;
+int limiarVermelho_OFF = 500;
 
 // Estado atual dos LEDs
 bool verdeLigado = false;
@@ -53,28 +53,16 @@ void loop() {
   delay(20);
 
   // --- LED Verde ---
-  if (!verdeLigado && valorSuave >= limiarVerde_ON) {
-    verdeLigado = true;
-  }
-  if (verdeLigado && valorSuave < limiarVerde_OFF) {
-    verdeLigado = false;
-  }
+  if (!verdeLigado && valorSuave >= limiarVerde_ON) verdeLigado = true;
+  if (verdeLigado && valorSuave < limiarVerde_OFF) verdeLigado = false;
 
   // --- LED Amarelo ---
-  if (!amareloLigado && valorSuave >= limiarAmarelo_ON) {
-    amareloLigado = true;
-  }
-  if (amareloLigado && valorSuave < limiarAmarelo_OFF) {
-    amareloLigado = false;
-  }
+  if (!amareloLigado && valorSuave >= limiarAmarelo_ON) amareloLigado = true;
+  if (amareloLigado && valorSuave < limiarAmarelo_OFF) amareloLigado = false;
 
   // --- LED Vermelho ---
-  if (!vermelhoLigado && valorSuave >= limiarVermelho_ON) {
-    vermelhoLigado = true;
-  }
-  if (vermelhoLigado && valorSuave < limiarVermelho_OFF) {
-    vermelhoLigado = false;
-  }
+  if (!vermelhoLigado && valorSuave >= limiarVermelho_ON) vermelhoLigado = true;
+  if (vermelhoLigado && valorSuave < limiarVermelho_OFF) vermelhoLigado = false;
 
   // Saída final (acumulativa)
   digitalWrite(LED_VERDE,   verdeLigado ? HIGH : LOW);
